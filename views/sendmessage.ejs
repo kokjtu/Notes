@@ -1,0 +1,15 @@
+<% include top %>
+<form method="POST" action="/dosendmessage">
+    <p>To:
+    <select name="seluserid">
+        <% for(var i in users) { %>
+            <option value="<%= users[i].id %>">
+                <%= users[i].name %>
+            </option>
+        <% } %>
+    </select>
+    </p>
+    <p>Message: <input type='text' name='message' /></p>
+    <p><input type='submit' value="Submit" /></p>
+</form>
+<% include bottom %>

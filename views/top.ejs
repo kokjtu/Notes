@@ -1,0 +1,60 @@
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = undefined;
+        var delMessage = function(idTo, idFrom, message) {
+            socket.emit('dodelmessage', idTo, idFrom, message);
+        }
+        $(document).ready(function() {
+            socket = io.connect('/'); 
+            <% if(user) { %> 
+                var getmessages = function() {
+                    socket.emit('getmessages', <%= user.id %>,
+                    function(msgs) {
+                        $('#messageBox').empty();
+                        if(msgs.length > 0) {
+                            for(var i in msgs) {
+                                $('#messageBox').append('<p>');
+                                $('#messageBox').append('<button onclick="delMessage('+
+                                                   msgs[i].idTo + ', ' +
+                                                   msgs[i].idFrom + ', \'' + 
+                                                   msgs[i].message + '\')">DEL</button> '); 
+                                $('#messageBox').append(msgs[i].fromName + ": ");
+                                $('#messageBox').append(msgs[i].message);
+                                $('#messageBox').append('</p>');
+                            }
+                            $('#messageBox').show();
+                        } else 
+                            $('#messageBox').hide();
+                    });
+        };
+        getmessages();
+        socket.on('newmessage', function(id) {
+            getmessages();
+        });
+        socket.on('delmessage', getmessages);
+        <% } %>
+    });
+    </script>
+</head>
+<body>
+    <h1><%= title %></h1>
+    <div class='navbar'>
+        <p>
+            <a href='/'>Home</a> | <a href='/noteadd'>ADD Note</a>
+            <% if(user) { %>
+            | <a href='/sendmessage'>Send message</a>
+            | <a href='/logout'>Log Out</a>
+            | logged in as <a href='/account'><%= user.username %></a>
+            <% } else { %>
+            | <a href='/login'>Log in</a>
+            <% } %>
+        </p>
+    </div>
+    <% if(user) { %>
+         <div id='messageBox' style='display:none;'></div>
+    <% } %>

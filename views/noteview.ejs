@@ -1,0 +1,33 @@
+<% include top %>
+<div id="noteview">
+<h3 id="notetitle"><%= note ? note.title : "" %></h3>
+<p id="notebody"><%- note ? note.body : "" %></p>
+<p>Key: <%= notekey %></p>
+<% if(user && notekey) { %>
+    <hr/>
+    <p><a href="/notedestroy?key=<%= notekey %>">Delete</a>
+    | <a href="/noteedit?key=<%= notekey %>">Edit</a></p>
+<% } %>
+</div>
+ 
+<script>
+    $(document).ready(function() {
+        var updatenote = function(newnote) {
+            $('#notetitle').empty();
+            $('#notetitle').append(newnote.title);
+            $('#notebody').empty();
+            $('#notebody').append(newnote.body);
+        }
+        socket.on('noteupdated', function(newnote) {
+            if(newnote.key === "<%= notekey %>") {
+                updatenote(newnote);
+            }
+        });
+        socket.on('notedeleted', function(notekey) {
+            if(notekey === "<%= notekey %>") {
+                document.location.href = "/";
+            }
+        });
+   });
+</script>
+<% include bottom %>
