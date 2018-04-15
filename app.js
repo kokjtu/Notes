@@ -118,7 +118,7 @@ module.exports = app;
 
 var server = http.Server(app);
 var io = require('socket.io').listen(server);
-app.set('port', 3000);
+app.set('port', process.env.PORT || 3000);
  
 server.listen(app.get('port'), function() {
     console.log("Express server listening on port " + app.get('port'));

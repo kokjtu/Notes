@@ -3,14 +3,14 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://kokjtu-notes.herokuapp.com/socket.io/socket.io.js"></script>
     <script>
         var socket = undefined;
         var delMessage = function(idTo, idFrom, message) {
             socket.emit('dodelmessage', idTo, idFrom, message);
         }
         $(document).ready(function() {
-            socket = io.connect('/'); 
+            socket = io.connect('https://kokjtu-notes.herokuapp.com'); 
             <% if(user) { %> 
                 var getmessages = function() {
                     socket.emit('getmessages', <%= user.id %>,
